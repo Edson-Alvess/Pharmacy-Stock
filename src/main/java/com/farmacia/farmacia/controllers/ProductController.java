@@ -21,32 +21,29 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductModel> saveProduct(@Valid @RequestBody ProductRecordDto productRecordDto){
+    public ResponseEntity<ProductModel> saveProduct(@Valid @RequestBody ProductRecordDto productRecordDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(productRecordDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductModel>> getAllProduct (){
+    public ResponseEntity<List<ProductModel>> getAllProduct() {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getIdProduct(@PathVariable UUID id){
-        try {
-            ProductModel product = productService.getIdProduct(id);
-            return ResponseEntity.ok(product);
-        }catch (ProductNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Object> getIdProduct(@PathVariable UUID id) {
+
+        ProductModel product = productService.getIdProduct(id);
+        return ResponseEntity.ok(product);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteIdProduct(@PathVariable UUID id){
+    public ResponseEntity<String> deleteIdProduct(@PathVariable UUID id) {
         try {
             productService.deleteIdProduct(id);
             return ResponseEntity.status(HttpStatus.OK).body("Product deleted");
-        }catch (ProductNotFoundException e){
+        } catch (ProductNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
@@ -58,18 +55,18 @@ public class ProductController {
 //    }
 
     @PostMapping("/{id}/sell")
-    public ResponseEntity<?> sellProduct(@PathVariable UUID id,@RequestParam int quantitySold ){
+    public ResponseEntity<?> sellProduct(@PathVariable UUID id, @RequestParam int quantitySold) {
         try {
             ProductModel updatedProduct = productService.sellProduct(id, quantitySold);
             return ResponseEntity.ok(updatedProduct);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
 
     @PostMapping("/{id}/addStock")
-    public ProductModel addStock(@PathVariable UUID id, @RequestParam (name = "quantityAdded") int quantityAdded){
-        return productService.addStock(id,quantityAdded);
+    public ProductModel addStock(@PathVariable UUID id, @RequestParam(name = "quantityAdded") int quantityAdded) {
+        return productService.addStock(id, quantityAdded);
     }
 }
